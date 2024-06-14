@@ -97,10 +97,29 @@ const get_all_courses = async (req,res) =>{
     }
 }
 
+const remove_course = async (req,res) =>{
+    const {id} = req.params;
+    const author_email = req.headers.email;
+    
+    try {
+        const result = await course_collection.deleteOne({_id:new ObjectId(id),author_email:author_email});
+        if(result.deletedCount > 0){
+            return res.status(202).json({status:true,message:"course deleted successfully"});
+
+        }else{
+            return res.status(200).json({status:false,message:"not success, try again later"});
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 module.exports = {
     insert_course,
     user_course_list,
     update_course,
     get_single_course,
-    get_all_courses
+    get_all_courses,
+    remove_course
 }
